@@ -224,7 +224,3 @@ Python provides great flexibility in interface design:
 - Python’s approach differs from **Java, C++, and Go**, which have explicit interface keywords.
 
 By implementing interfaces, you can create well-structured, maintainable, and scalable software.
-
-# jupyter-docker-compose
-# jupyter-docker-compose
-# jupyter-docker-compose
