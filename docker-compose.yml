@@ -6,7 +6,7 @@ services:
     ports:
       - 8888:8888
     volumes:
-      - .:/etc/jupyter-notebooks/work
+      - .:/home/jovyan/work
     command: "start-notebook.sh"
     user: root
     environment:
