@@ -1,0 +1,12 @@
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: ./jupyter-notebooks/Dockerfile
+    container_name: jupyter-docker-compose
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/etc/jupyter-docker-compose
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
