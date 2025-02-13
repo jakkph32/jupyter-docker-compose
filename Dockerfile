@@ -13,10 +13,10 @@ ENV CHOWN_HOME_OPTS: -R
 USER root
 
 # Copy the Jupyter notebooks to the working directory
-COPY . /home/jovyan/work
+COPY . /etc/jupyter-notebooks/work
 
 # Set the working directory
-WORKDIR /home/jovyan/work
+WORKDIR /etc/jupyter-notebooks/work
 
 # Expose the port Jupyter uses
 EXPOSE 8888
