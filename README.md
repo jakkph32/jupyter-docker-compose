@@ -13,7 +13,7 @@
    docker-compose up --build
    ```
 
-2. Access Jupyter Notebook in your web browser at `http://localhost:8888`. Use the token provided in the console output to log in.
+2. Access Jupyter Notebook in your web browser at `http://localhost:8888`. Token is `token`.
 
 ---
 

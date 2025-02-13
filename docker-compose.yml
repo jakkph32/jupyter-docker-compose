@@ -1,12 +1,19 @@
+---
 services:
   jupyter:
-    build:
-      context: .
-      dockerfile: ./jupyter-notebooks/Dockerfile
-    container_name: jupyter-docker-compose
+    build: .
+    container_name: jupyter-notebooks
     ports:
-      - "8888:8888"
+      - 8888:8888
     volumes:
-      - .:/etc/jupyter-docker-compose
+      - .:/home/jovyan/work
+    command: "start-notebook.sh"
+    user: root
     environment:
-      - JUPYTER_ENABLE_LAB=yes
+      JUPYTER_ENABLE_LAB: yes
+      JUPYTER_TOKEN: token
+      NB_USER: jupyternb
+      NB_UID: 1000
+      NB_GID: 100
+      CHOWN_HOME: yes
+      CHOWN_HOME_OPTS: -R

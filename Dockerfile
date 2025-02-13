@@ -2,13 +2,21 @@
 FROM jupyter/base-notebook:latest
 
 # Set environment variables
-ENV JUPYTER_ENABLE_LAB=yes
+ENV JUPYTER_ENABLE_LAB: yes
+ENV JUPYTER_TOKEN: token
+ENV NB_USER: jupyternb
+ENV NB_UID: 1000
+ENV NB_GID: 100
+ENV CHOWN_HOME: yes
+ENV CHOWN_HOME_OPTS: -R
+
+USER root
 
 # Copy the Jupyter notebooks to the working directory
-COPY . /etc/jupytor-docker-compose/work
+COPY . /home/jovyan/work
 
 # Set the working directory
-WORKDIR /etc/jupytor-docker-compose/work
+WORKDIR /home/jovyan/work
 
 # Expose the port Jupyter uses
 EXPOSE 8888
