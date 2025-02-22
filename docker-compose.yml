@@ -1,19 +1,56 @@
 ---
 services:
+
   jupyter:
-    build: .
-    container_name: jupyter-notebooks
-    ports:
-      - 8888:8888
-    volumes:
-      - .:/home/jovyan/work
-    command: "start-notebook.sh"
+    restart: always
+    image: jupyter/base-notebook:latest
+    command: start-notebook.sh
     user: root
     environment:
-      JUPYTER_ENABLE_LAB: yes
-      JUPYTER_TOKEN: token
-      NB_USER: jupyternb
-      NB_UID: 1000
-      NB_GID: 100
-      CHOWN_HOME: yes
-      CHOWN_HOME_OPTS: -R
+      NB_UID: ${NB_UID}
+      NB_USER: ${NB_USER}
+      NB_GID: ${NB_GID}
+      CHOWN_HOME: ${CHOWN_HOME}
+      CHOWN_HOME_OPTS: ${CHOWN_HOME_OPTS}
+      JUPYTER_ENABLE_LAB: ${JUPYTER_ENABLE_LAB}
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN}
+    volumes:
+      - .:/home/jovyan/work
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.jupyter.rule=Host(`${HOST}`)
+    - traefik.http.routers.jupyter.tls=true
+    - traefik.http.routers.jupyter.tls.certresolver=le
+    - traefik.http.services.jupyter.loadbalancer.server.port=8888
+
+  traefik:
+    restart: always
+    image: traefik:2.5
+    ports:
+      - 80:80
+      - 443:443
+    command:
+    #- "--accesslog=true"
+    - "--entryPoints.http.address=:80"
+    - "--entryPoints.https.address=:443"
+    - "--certificatesResolvers.le.acme.email=jerome.petazzoni@gmail.com"
+    - "--certificatesResolvers.le.acme.storage=/letsencrypt/acme.json"
+    - "--certificatesResolvers.le.acme.tlsChallenge=true"
+    - "--certificatesResolvers.le.acme.httpChallenge=true"
+    - "--certificatesResolvers.le.acme.httpChallenge.entryPoint=http"
+    - "--providers.docker=true"
+    - "--providers.docker.exposedByDefault=true"
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ./letsencrypt:/letsencrypt
+    labels:
+    # Redirect all HTTP to HTTPS permanently.
+    - traefik.enable=true
+    - traefik.http.routers.http_catchall.entrypoints=http
+    - traefik.http.routers.http_catchall.rule=HostRegexp(`{any:.+}`)
+    - traefik.http.routers.http_catchall.middlewares=https_redirect
+    - traefik.http.middlewares.https_redirect.redirectscheme.scheme=https
+    - traefik.http.middlewares.https_redirect.redirectscheme.permanent=true
+    # We need to define a dummy port value, even though it's not used.
+    # Otherwise, Traefik ignores the HTTP->HTTPS redirect defined above.
+    - traefik.http.services.traefik.loadbalancer.server.port=80
