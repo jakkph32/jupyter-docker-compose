@@ -6,6 +6,8 @@ services:
     image: jupyter/base-notebook:latest
     command: start-notebook.sh
     user: root
+    ports:
+      - 8888:8888
     environment:
       NB_UID: ${NB_UID}
       NB_USER: ${NB_USER}
