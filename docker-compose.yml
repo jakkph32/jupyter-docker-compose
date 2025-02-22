@@ -4,10 +4,9 @@ services:
   jupyter:
     restart: always
     image: jupyter/base-notebook:latest
+    container_name: jupyternb
     command: start-notebook.sh
     user: root
-    ports:
-      - 8888:8888
     environment:
       NB_UID: ${NB_UID}
       NB_USER: ${NB_USER}
@@ -28,6 +27,7 @@ services:
   traefik:
     restart: always
     image: traefik:2.5
+    container_name: traefik
     ports:
       - 80:80
       - 443:443
